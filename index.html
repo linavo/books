@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Library</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="topBar">
+      <div class="libraryLogo">
+        <h2>Library</h2>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          class="bi bi-book-fill"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783z"
+          />
+        </svg>
+      </div>
+      <div></div>
+      <div class="topRightBar">
+        <h5>Log in</h5>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          fill="#444444"
+          class="bi bi-plus-circle"
+          viewBox="0 0 16 16"
+          id="addBook"
+        >
+          <path
+            d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
+          />
+          <path
+            d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"
+          />
+        </svg>
+      </div>
+    </div>
+    <div class="sideBar">
+      <div class="formContainer">
+        <h2>New Book</h2>
+        <div class="inputContainer">
+          <input type="text" name="title" id="title" required />
+          <label for="title">Title</label>
+        </div>
+        <div class="inputContainer">
+          <input type="text" name="author" id="author" required />
+          <label for="author">Author</label>
+        </div>
+        <div class="inputContainer">
+          <input type="number" name="pages" id="pages" required />
+          <label for="pages">Pages</label>
+        </div>
+        <div class="checkContainer">
+          <label class="read" for="read">Read</label>
+          <div class="checkboxContainer">
+            <input type="checkbox" name="read" id="read" />
+            <span class="checkmark"></span>
+          </div>
+        </div>
+        <button type="submit" class="addBtn">Add to Library</button>
+      </div>
+    </div>
+    <div class="popUpContainer">
+      <div class="firstPopUp">
+        <h3>
+          Click on the plus + sign on the top right hand corner to add a book!
+        </h3>
+      </div>
+    </div>
+    <div class="main"></div>
+    <script src="app.js"></script>
+  </body>
+</html>
