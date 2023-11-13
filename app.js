@@ -1,4 +1,5 @@
-const myLibrary = [];
+const myLibrary = JSON.parse(localStorage.getItem("myLibrary")) || [];
+const form = document.querySelector(".formContainer");
 
 function Book(title, author, pages, read) {
   // the constructor...
@@ -7,155 +8,122 @@ function Book(title, author, pages, read) {
   this.pages = pages;
   this.read = read;
 }
-function addBookToLibrary(book) {
-  // do stuff here
-  myLibrary.push(book);
-}
-// use below after items have been added to the DOM to delete the rest !!!
-let books = myLibrary.forEach((book) => {
-  let card = document.createElement("div");
-  let progressStatus;
-  card.className = "exampleCard";
-  if (book.read == true) {
-    progressStatus = "Completed";
-  } else if (book.read == false) {
-    progressStatus = "In Progress";
-  }
-  card.innerHTML = `<h2>${book.title}</h2><p>by ${book.author}</p><button class="readBtn">Read</button>
-  <button class="deleteBtn">Delete</button><div class="progress">
-  <p>${progressStatus}</p>
-  <p>${book.pages} pages</p>
-</div>`;
-  document.querySelector(".main").appendChild(card);
-});
 
-// document.querySelector(".topRightBar").addEventListener("click", () => {
-//   document.querySelector(".popUpContainer").style.height = "0";
-//   document.querySelector(".firstPopUp").style.height = "0";
-// });
+function addBook(book) {
+  let deleteBtn = document.createElement("button");
 
-// Add new book to myLibrary Array from the browser
-let addBtn = document.querySelector(".addBtn");
-addBtn.addEventListener("click", () => {
   let title = document.querySelector("#title").value;
   let author = document.querySelector("#author").value;
   let pages = document.querySelector("#pages").value;
   let read = document.querySelector("#read").checked;
-  let pushBookValues = new Book(title, author, pages, read);
-  addBookToLibrary(pushBookValues);
-  let card = document.createElement("div");
-  let progressStatus;
-  let readStatus;
-  let readText;
-  card.className = "exampleCard";
-  if (pushBookValues.read == true) {
-    progressStatus = "Completed";
-    readStatus = "readBtn";
-    readText = "Read";
-  } else if (pushBookValues.read == false) {
-    progressStatus = "In Progress";
-    readStatus = "unreadBtn";
-    readText = "Unread";
-  }
-  let index = myLibrary.findIndex((e) => e.pages == pushBookValues.pages);
-  card.innerHTML = `<h2>${pushBookValues.title}</h2><p>by ${pushBookValues.author}</p><button class="${readStatus}" data-name="${index}" data-name2="${pushBookValues.read}" onclick="toggleReadStatus(this)">${readText}</button>
-  <button class="deleteBtn" data-name="${index}" onclick="deleteBook(this)">Delete</button><div class="progress">
-  <p>${progressStatus}</p>
-  <p>${pushBookValues.pages} pages</p>
-</div>`;
-  document.querySelector(".main").appendChild(card);
+
+  const newBook = new Book(title, author, pages, read);
+  myLibrary.push(newBook);
+  localStorage.setItem("myLibrary", JSON.stringify(myLibrary));
+
   document.querySelector(".popUpContainer").style.height = "0";
   document.querySelector(".firstPopUp").style.height = "0";
-});
 
-// i have no idea what code this is below lol
-// let individualBooks = document.querySelectorAll(".exampleCard");
-// individualBooks.forEach((book) => {
-//   book.addEventListener("click", () => {
-//     document.querySelector(".main").removeChild(book);
-//   });
-// });
+  form.reset();
 
-// remove book from array AND dom
-function deleteBook(button) {
-  // used splice to remove index of book in array by assigning data attribute
-  let book = button.getAttribute("data-name");
-  myLibrary.splice(book, 1);
-  console.log(book);
+  let child = document.querySelector(".main").lastElementChild;
+  while (child) {
+    document.querySelector(".main").removeChild(child);
+    child = document.querySelector(".main").lastElementChild;
+  }
+  getBooks();
   console.log(myLibrary);
-  // remove ALL child nodes from main so it can have a blank canvas before re-adding books to the page
-  let child = document.querySelector(".main").lastElementChild;
-  while (child) {
-    document.querySelector(".main").removeChild(child);
-    child = document.querySelector(".main").lastElementChild;
-  }
-  // re-add the updated array to page!!!
-  let books = myLibrary.forEach((book) => {
+}
+
+function getBooks() {
+  myLibrary.forEach((book, index) => {
     let card = document.createElement("div");
-    let progressStatus;
-    let readStatus;
-    let readText;
-    card.className = "exampleCard";
-    if (book.read == true) {
-      progressStatus = "Completed";
-      readStatus = "readBtn";
-      readText = "Read";
-    } else if (book.read == false) {
-      progressStatus = "In Progress";
-      readStatus = "unreadBtn";
-      readText = "Unread";
-    }
-    let index = myLibrary.findIndex((e) => e.pages == book.pages);
-    card.innerHTML = `<h2>${book.title}</h2><p>by ${book.author}</p><button class="${readStatus}" data-name="${index}" data-name2="${book.read}"  onclick="toggleReadStatus(this)">${readText}</button>
-  <button class="deleteBtn" data-name="${index}" onclick="deleteBook(this)">Delete</button><div class="progress">
-  <p>${progressStatus}</p>
-  <p>${book.pages} pages</p>
-</div>`;
+    let bookTitle = document.createElement("h2");
+    let bookAuthor = document.createElement("p");
+    let readBtn = document.createElement("button");
+    let deleteBtn = document.createElement("button");
+    let progressContainer = document.createElement("div");
+    let progressP1 = document.createElement("p");
+    let progressP2 = document.createElement("p");
+
+    let title = book.title;
+    let author = book.author;
+    let pages = book.pages;
+    let read = book.read;
+
+    let readStatus = read == true ? "readBtn" : "unreadBtn";
+    let progressStatus = read == true ? "Completed" : "In Progress";
+    let readText = read == true ? "Read" : "Unread";
+
+    deleteBtn.setAttribute("data-id", `${pages}`);
+    readBtn.classList.add(`${readStatus}`);
+    deleteBtn.classList.add("deleteBtn");
+    card.classList.add("exampleCard");
+    progressContainer.classList.add("progress");
+
+    bookTitle.innerHTML = `${title}`;
+    bookAuthor.innerHTML = `by ${author}`;
+    progressP1.innerHTML = `${progressStatus}`;
+    progressP2.innerHTML = `${pages}`;
+    readBtn.innerHTML = `${readText}`;
+    deleteBtn.innerHTML = `Delete`;
+
+    card.appendChild(bookTitle);
+    card.appendChild(bookAuthor);
+    card.appendChild(readBtn);
+    card.appendChild(deleteBtn);
+    progressContainer.appendChild(progressP1);
+    progressContainer.appendChild(progressP2);
+    card.appendChild(progressContainer);
+
     document.querySelector(".main").appendChild(card);
+    document.querySelector(".popUpContainer").style.height = "0";
+    document.querySelector(".firstPopUp").style.height = "0";
+
+    readBtn.addEventListener("click", () => {
+      readBtn.removeAttribute("class");
+      if (book.read == true) {
+        readBtn.classList.add("unreadBtn");
+        progressP1.innerHTML = "In Progress";
+        readBtn.innerHTML = "Unread";
+        book.read = false;
+        localStorage.setItem("myLibrary", JSON.stringify(myLibrary));
+      } else if (book.read == false) {
+        readBtn.classList.add("readBtn");
+        progressP1.innerHTML = "Completed";
+        readBtn.innerHTML = "Read";
+        book.read = true;
+        localStorage.setItem("myLibrary", JSON.stringify(myLibrary));
+      }
+    });
+
+    deleteBtn.addEventListener("click", (e) => {
+      document.querySelector(".main").removeChild(card);
+    });
+  });
+  console.log(myLibrary);
+  deleteItem();
+}
+
+// single responsibility rule: SEPARATE THE UI FROM THE FUNCTIONALITY/LOGIC!!!
+function deleteItem() {
+  let deleteBtn = document.querySelectorAll(".deleteBtn");
+  deleteBtn.forEach((button) => {
+    let dataID = button.getAttribute("data-id");
+    let index = myLibrary.findIndex((e) => e.pages == dataID);
+    button.addEventListener("click", () => {
+      myLibrary.splice(index, 1);
+      localStorage.setItem("myLibrary", JSON.stringify(myLibrary));
+      console.log(myLibrary);
+    });
   });
 }
 
-// toggle the read status class
-function toggleReadStatus(button) {
-  let book = button.getAttribute("data-name");
-  let truthy = button.getAttribute("data-name2");
-
-  if (truthy == false || truthy == "false") {
-    myLibrary[book].read = true;
-  } else if (truthy == true || truthy == "true") {
-    myLibrary[book].read = false;
-  }
-  // remove ALL child nodes from main so it can have a blank canvas before re-adding books to the page
-  let child = document.querySelector(".main").lastElementChild;
-  while (child) {
-    document.querySelector(".main").removeChild(child);
-    child = document.querySelector(".main").lastElementChild;
-  }
-  // re-add the updated array to page!!!
-  let books = myLibrary.forEach((book) => {
-    let card = document.createElement("div");
-    let progressStatus;
-    let readStatus;
-    let readText;
-    card.className = "exampleCard";
-    if (book.read == true) {
-      progressStatus = "Completed";
-      readStatus = "readBtn";
-      readText = "Read";
-    } else if (book.read == false) {
-      progressStatus = "In Progress";
-      readStatus = "unreadBtn";
-      readText = "Unread";
-    }
-    let index = myLibrary.findIndex((e) => e.pages == book.pages);
-    card.innerHTML = `<h2>${book.title}</h2><p>by ${book.author}</p><button class="${readStatus}" data-name="${index}" data-name2="${book.read}"  onclick="toggleReadStatus(this)">${readText}</button>
-  <button class="deleteBtn" data-name="${index}" onclick="deleteBook(this)">Delete</button><div class="progress">
-  <p>${progressStatus}</p>
-  <p>${book.pages} pages</p>
-</div>`;
-    document.querySelector(".main").appendChild(card);
-  });
-}
+window.addEventListener("load", getBooks);
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  addBook(e);
+});
 
 // makes sidebar open
 document.querySelector("#addBook").addEventListener("click", () => {
@@ -166,5 +134,8 @@ document.querySelector(".main").addEventListener("click", () => {
   document.querySelector(".sideBar").style.width = "0px";
 });
 document.querySelector(".popUpContainer").addEventListener("click", () => {
+  document.querySelector(".sideBar").style.width = "0px";
+});
+document.querySelector(".libraryLogo").addEventListener("click", () => {
   document.querySelector(".sideBar").style.width = "0px";
 });
